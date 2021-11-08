@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { areGamesLive } from '../services/areGamesLive';
+import { news } from '../services/news';
 
 export const getBaseRoute = async (req: Request, res: Response) => {
   console.log('Passing through base route')
@@ -11,9 +12,30 @@ export const getGamesLive = async (req: Request, res: Response) => {
   const gamesLive = await areGamesLive()
   
   if(gamesLive.data){
-    res.send('There are games being played right now!')
+    res.status(200).json({
+      live: true
+    });
   }
   else{
-    res.send('No games being played right now.')
+    res.status(200).json({
+      live: false
+    });
   }
+}
+
+export const getNews = async (req: Request, res: Response) => {
+  console.log('Getting news');
+  const myNews = await news()
+
+  if(myNews.data) {
+    res.status(200).json({
+      news: myNews.data
+    });
+  }
+  else{
+    res.status(400).json({
+      news: false
+    });
+  }
+
 }
